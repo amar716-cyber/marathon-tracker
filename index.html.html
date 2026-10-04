@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Marathon">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#faf9f7">
+<title>Marathon Training Tracker</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --card: #ffffff;
+    --border: #e8e5e0;
+    --text: #2b2b2b;
+    --muted: #8a8580;
+    --accent: #d9622b;
+    --accent-soft: #fbe8dc;
+    --done: #4a9b6e;
+    --done-soft: #e3f2e9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+
+    --type-rest-bg: #f2f0ee;
+    --type-rest-border: #c9c4bd;
+    --type-xt-bg: #fdf1e4;
+    --type-xt-border: #e3a361;
+    --type-mt-bg: #f2ecfa;
+    --type-mt-border: #b28ce0;
+    --type-run-short-bg: #eaf7f0;
+    --type-run-short-border: #7ecda0;
+    --type-run-medium-bg: #e0f4f2;
+    --type-run-medium-border: #4fb3ac;
+    --type-run-long-bg: #e2eefb;
+    --type-run-long-border: #5b93d9;
+    --type-run-verylong-bg: #eae2fb;
+    --type-run-verylong-border: #9370d9;
+    --type-race-bg: #fdf6df;
+    --type-race-border: #e0b23d;
+
+    --stat-runs-bg: #fdeae7;
+    --stat-runs-text: #c1614f;
+    --stat-miles-bg: #e0f4ea;
+    --stat-miles-text: #3f8a63;
+    --stat-pace-bg: #eae2fb;
+    --stat-pace-text: #7457a6;
+
+    --good-bg: #e3f4e9;
+    --good-text: #3f8a63;
+    --good-bg-active: #bfe6cd;
+    --bad-bg: #fbe4e6;
+    --bad-text: #c1614f;
+    --bad-bg-active: #f3b9be;
+
+    --habit-missed-bg: #e2685c;
+    --streak-bg: #e0f4ea;
+    --streak-text: #3f8a63;
+    --amber-bg: #fdf1d9;
+    --amber-text: #b5842a;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1a17;
+      --card: #262320;
+      --border: #3a352f;
+      --text: #f1ece4;
+      --muted: #948d83;
+      --accent: #ea8148;
+      --accent-soft: #3d2b1c;
+      --done: #5fbb82;
+      --done-soft: #1e3327;
+      --shadow: 0 1px 3px rgba(0,0,0,0.35);
+
+      --type-rest-bg: #2a2826;
+      --type-rest-border: #4a453e;
+      --type-xt-bg: #332417;
+      --type-xt-border: #c98b4f;
+      --type-mt-bg: #2b2236;
+      --type-mt-border: #9670c9;
+      --type-run-short-bg: #1c2e24;
+      --type-run-short-border: #5fae80;
+      --type-run-medium-bg: #1a2e2b;
+      --type-run-medium-border: #3f9d95;
+      --type-run-long-bg: #1c2636;
+      --type-run-long-border: #4a7dc2;
+      --type-run-verylong-bg: #251e33;
+      --type-run-verylong-border: #7c5cc2;
+      --type-race-bg: #332b16;
+      --type-race-border: #c99a2e;
+
+      --stat-runs-bg: #3a2620;
+      --stat-runs-text: #e0998a;
+      --stat-miles-bg: #1f3328;
+      --stat-miles-text: #8fd1ac;
+      --stat-pace-bg: #2c2438;
+      --stat-pace-text: #c3aee0;
+
+      --good-bg: #1f3a2a;
+      --good-text: #8fd1ac;
+      --good-bg-active: #2f5940;
+      --bad-bg: #3a2225;
+      --bad-text: #e0998a;
+      --bad-bg-active: #5a2f34;
+
+      --habit-missed-bg: #c9645f;
+      --streak-bg: #1f3328;
+      --streak-text: #8fd1ac;
+      --amber-bg: #3a2f16;
+      --amber-text: #e0b563;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1c1a17;
+    --card: #262320;
+    --border: #3a352f;
+    --text: #f1ece4;
+    --muted: #948d83;
+    --accent: #ea8148;
+    --accent-soft: #3d2b1c;
+    --done: #5fbb82;
+    --done-soft: #1e3327;
+    --shadow: 0 1px 3px rgba(0,0,0,0.35);
+
+    --type-rest-bg: #2a2826;
+    --type-rest-border: #4a453e;
+    --type-xt-bg: #332417;
+    --type-xt-border: #c98b4f;
+    --type-mt-bg: #2b2236;
+    --type-mt-border: #9670c9;
+    --type-run-short-bg: #1c2e24;
+    --type-run-short-border: #5fae80;
+    --type-run-medium-bg: #1a2e2b;
+    --type-run-medium-border: #3f9d95;
+    --type-run-long-bg: #1c2636;
+    --type-run-long-border: #4a7dc2;
+    --type-run-verylong-bg: #251e33;
+    --type-run-verylong-border: #7c5cc2;
+    --type-race-bg: #332b16;
+    --type-race-border: #c99a2e;
+
+    --stat-runs-bg: #3a2620;
+    --stat-runs-text: #e0998a;
+    --stat-miles-bg: #1f3328;
+    --stat-miles-text: #8fd1ac;
+    --stat-pace-bg: #2c2438;
+    --stat-pace-text: #c3aee0;
+
+    --good-bg: #1f3a2a;
+    --good-text: #8fd1ac;
+    --good-bg-active: #2f5940;
+    --bad-bg: #3a2225;
+    --bad-text: #e0998a;
+    --bad-bg-active: #5a2f34;
+
+    --habit-missed-bg: #c9645f;
+    --streak-bg: #1f3328;
+    --streak-text: #8fd1ac;
+    --amber-bg: #3a2f16;
+    --amber-text: #e0b563;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    padding: 20px 16px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0 0 2px;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .edit-date-btn {
+    flex: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .edit-date-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .progress-track {
+    height: 10px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .stat-tile {
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-label {
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.85;
+  }
+
+  .stat-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-runs { background: var(--stat-runs-bg); color: var(--stat-runs-text); }
+  .stat-miles { background: var(--stat-miles-bg); color: var(--stat-miles-text); }
+  .stat-pace { background: var(--stat-pace-bg); color: var(--stat-pace-text); }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12px 12px 60px;
+  }
+
+  .habit-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .habit-title {
+    margin: 0 0 12px;
+    font-size: 1rem;
+  }
+
+  .streaks-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .streak-tile {
+    border-radius: 10px;
+    padding: 8px 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+  }
+
+  .streak-tile.tier-zero { background: var(--bad-bg); color: var(--bad-text); }
+  .streak-tile.tier-amber { background: var(--amber-bg); color: var(--amber-text); }
+  .streak-tile.tier-green { background: var(--streak-bg); color: var(--streak-text); }
+
+  .streak-tile.tier-party {
+    background: linear-gradient(135deg, var(--streak-bg), var(--accent-soft));
+    color: var(--streak-text);
+    box-shadow: 0 0 0 2px var(--accent);
+    animation: streak-glow 1.6s ease-in-out infinite;
+  }
+
+  .streak-tile.tier-party .streak-value::before { content: "🎉"; margin-right: 3px; }
+  .streak-tile.tier-party .streak-value::after { content: "✨"; margin-left: 3px; }
+
+  @keyframes streak-glow {
+    0%, 100% { box-shadow: 0 0 0 2px var(--accent); }
+    50% { box-shadow: 0 0 0 4px var(--accent); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .streak-tile.tier-party { animation: none; }
+  }
+
+  .streak-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.85;
+  }
+
+  .streak-value {
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .habit-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .habit-tab {
+    flex: 1;
+    padding: 8px 4px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 8px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .habit-tab.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .habit-calendar-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .cal-day-labels {
+    flex: none;
+    display: grid;
+    grid-template-rows: 12px repeat(7, 16px);
+    gap: 3px;
+  }
+
+  .cal-day-label {
+    font-size: 8px;
+    line-height: 16px;
+    color: var(--muted);
+    text-align: right;
+    padding-right: 3px;
+    white-space: nowrap;
+  }
+
+  .habit-calendar-wrap {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .habit-calendar {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: 12px repeat(7, 16px);
+    grid-auto-columns: 16px;
+    gap: 3px;
+    width: max-content;
+  }
+
+  .cal-week-label {
+    font-size: 8px;
+    line-height: 12px;
+    text-align: center;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+  }
+
+  .cal-cell {
+    border-radius: 50%;
+  }
+
+  .cal-cell.state-done { background: var(--done); }
+  .cal-cell.state-missed { background: var(--habit-missed-bg); }
+  .cal-cell.state-today { background: var(--accent-soft); border: 2px solid var(--accent); }
+  .cal-cell.state-future { background: var(--border); }
+
+  .habit-legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+    font-size: 0.7rem;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+
+  .habit-legend .dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .dot-green { background: var(--done); }
+  .dot-red { background: var(--habit-missed-bg); }
+  .dot-neutral { background: var(--border); }
+
+  .habits-row {
+    display: flex;
+    gap: 6px;
+    padding: 0 12px 10px 12px;
+  }
+
+  .habit-btn {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 8px;
+    padding: 5px 4px;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity 0.15s ease, background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .habit-btn:active { transform: scale(0.92); }
+
+  .habit-btn.active {
+    opacity: 1;
+    background: var(--done-soft);
+    border-color: var(--done);
+  }
+
+  details.week {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  details.week[open] summary {
+    border-bottom: 1px solid var(--border);
+  }
+
+  summary.week-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    display: block;
+  }
+
+  summary.week-summary::-webkit-details-marker { display: none; }
+
+  .week-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .week-title {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .week-num {
+    font-weight: 700;
+    font-size: 0.98rem;
+  }
+
+  .week-total {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .week-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .week-chip {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .week-chip.complete {
+    background: var(--done-soft);
+    color: var(--done);
+  }
+
+  .chevron {
+    color: var(--muted);
+    transition: transform 0.2s ease;
+    font-size: 0.8rem;
+  }
+
+  details[open] .chevron { transform: rotate(90deg); }
+
+  .week-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 5px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+
+  .week-narrative {
+    font-weight: 600;
+  }
+
+  .day-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .day-entry {
+    border-radius: 10px;
+    border-left: 4px solid transparent;
+    overflow: hidden;
+  }
+
+  .day-entry.type-rest { background: var(--type-rest-bg); border-left-color: var(--type-rest-border); }
+  .day-entry.type-xt { background: var(--type-xt-bg); border-left-color: var(--type-xt-border); }
+  .day-entry.type-mt { background: var(--type-mt-bg); border-left-color: var(--type-mt-border); }
+  .day-entry.type-run-short { background: var(--type-run-short-bg); border-left-color: var(--type-run-short-border); }
+  .day-entry.type-run-medium { background: var(--type-run-medium-bg); border-left-color: var(--type-run-medium-border); }
+  .day-entry.type-run-long { background: var(--type-run-long-bg); border-left-color: var(--type-run-long-border); }
+  .day-entry.type-run-verylong { background: var(--type-run-verylong-bg); border-left-color: var(--type-run-verylong-border); }
+  .day-entry.type-race { background: var(--type-race-bg); border-left-color: var(--type-race-border); }
+
+  .day-entry.type-rest .session-text { color: var(--muted); font-weight: 400; }
+
+  .day-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .checkbox {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card);
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .checkbox svg {
+    width: 15px;
+    height: 15px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  input.day-check {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  input.day-check:checked + .checkbox {
+    background: var(--done);
+    border-color: var(--done);
+  }
+
+  input.day-check:checked + .checkbox svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  input.day-check:active + .checkbox {
+    transform: scale(0.9);
+  }
+
+  .day-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .day-name {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+
+  .session-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .day-row.checked .session-text {
+    text-decoration: line-through;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .run-panel {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 12px 12px 12px;
+  }
+
+  .day-entry.checked .run-panel {
+    display: flex;
+  }
+
+  .rating-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .rate-btn {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  }
+
+  .rate-btn:active { transform: scale(0.96); }
+
+  .rate-btn.rate-good { background: var(--good-bg); }
+  .rate-btn.rate-bad { background: var(--bad-bg); }
+  .rate-btn.rate-good.active { background: var(--good-bg-active); color: var(--good-text); }
+  .rate-btn.rate-bad.active { background: var(--bad-bg-active); color: var(--bad-text); }
+
+  .time-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .time-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .time-input {
+    width: 90px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pace-display {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  footer {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 10px 16px 40px;
+    text-align: center;
+  }
+
+  .reset-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .notice {
+    max-width: 640px;
+    margin: 12px auto 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--amber-bg);
+    color: var(--amber-text);
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .notice[hidden] { display: none; }
+
+  .footer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .footer-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 9px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .footer-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  #printView {
+    display: none;
+  }
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    header, main, footer, .modal-overlay {
+      display: none !important;
+    }
+
+    #printView {
+      display: block !important;
+      padding: 0;
+      color: #111;
+      background: #fff;
+      width: 100%;
+    }
+
+    #printView h1 {
+      font-size: 12pt;
+      line-height: 1.1;
+      margin: 0 0 1mm;
+    }
+
+    #printView .print-meta {
+      font-size: 7.5pt;
+      line-height: 1.1;
+      color: #444;
+      margin: 0 0 1.5mm;
+    }
+
+    #printView .print-legend {
+      display: flex;
+      gap: 8mm;
+      font-size: 7.5pt;
+      line-height: 1.1;
+      margin-bottom: 1.5mm;
+      color: #333;
+    }
+
+    #printView .print-grid-title {
+      font-size: 8.5pt;
+      line-height: 1.1;
+      margin: 1.5mm 0 0.8mm;
+      page-break-after: avoid;
+    }
+
+    .print-grid {
+      border-collapse: collapse;
+      font-size: 6.5pt;
+      page-break-inside: avoid;
+    }
+
+    .print-grid th, .print-grid td {
+      border: 0.5px solid #999;
+      width: 6.2mm;
+      height: 3.4mm;
+      text-align: center;
+      padding: 0;
+      font-weight: normal;
+    }
+
+    .print-grid tbody th {
+      width: auto;
+      min-width: 7mm;
+    }
+
+    .print-grid th.corner { border: none; }
+
+    .print-grid thead th {
+      font-weight: 600;
+      font-size: 5.5pt;
+    }
+
+    .print-grid tbody th {
+      text-align: right;
+      padding-right: 1mm;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 6.5pt;
+    }
+
+    .pg-missed { background: #f8d0cf; }
+    .pg-today { background: #fdeab8; }
+    .pg-future { background: #edf1f6; }
+
+    .grid-theme-mld td.pg-done { background: #e3d7f5; }
+    .grid-theme-water td.pg-done { background: #cfe6f8; }
+    .grid-theme-sleep td.pg-done { background: #d6d6f2; }
+    .grid-theme-stretch td.pg-done { background: #d3f0dc; }
+    .grid-theme-run td.pg-done { background: #fbe3c0; }
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 15, 10, 0.45);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 22px;
+    max-width: 340px;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .modal-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+  }
+
+  .modal-card p {
+    margin: 0 0 16px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .modal-card input[type="date"] {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<noscript>
+  <div class="notice" style="margin:16px;">
+    <strong>This tracker can't run in this view.</strong><br>
+    If you opened it from a preview on iPhone (Mail, Messages, Files or OneDrive), scripts are switched off there, so nothing &mdash; including the start-date box &mdash; will work. Open it in Safari from a web link instead.
+  </div>
+</noscript>
+
+<div class="notice" id="storageWarning" hidden style="margin:12px 12px 0;">
+  <strong>Progress can't be saved in this view.</strong> Open the tracker in your browser (Safari on iPhone) rather than a preview or in-app window, otherwise your ticks will be lost when you close it.
+</div>
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1>🏃 32-Week Marathon Plan</h1>
+      <p class="subtitle">Beginner schedule &middot; miles &middot; <span id="weekLabel">Week 1 of 32</span></p>
+    </div>
+    <button class="edit-date-btn" id="editStartDateBtn" type="button">🏁 <span id="raceDateLabel">Set start date</span></button>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label">
+    <span id="progressText">0 mi run</span>
+    <span id="milesToGoText"></span>
+  </div>
+  <div class="stats-row">
+    <div class="stat-tile stat-runs"><span class="stat-label">Runs left</span><span class="stat-value" id="statRunsLeft">–</span></div>
+    <div class="stat-tile stat-miles"><span class="stat-label">Miles logged</span><span class="stat-value" id="statMiles">–</span></div>
+    <div class="stat-tile stat-pace"><span class="stat-label">Avg pace</span><span class="stat-value" id="statPace">–</span></div>
+  </div>
+</header>
+
+<main>
+  <div class="habit-card">
+    <h2 class="habit-title">🔥 Habit Streaks</h2>
+    <div class="streaks-row">
+      <div class="streak-tile tier-zero" data-habit="mld"><span class="streak-label">MLD</span><span class="streak-value" id="streakMld">0 days</span></div>
+      <div class="streak-tile tier-zero" data-habit="water"><span class="streak-label">Water</span><span class="streak-value" id="streakWater">0 days</span></div>
+      <div class="streak-tile tier-zero" data-habit="sleep"><span class="streak-label">Sleep</span><span class="streak-value" id="streakSleep">0 days</span></div>
+      <div class="streak-tile tier-zero" data-habit="stretch"><span class="streak-label">Stretch</span><span class="streak-value" id="streakStretch">0 days</span></div>
+    </div>
+    <div class="habit-tabs" id="habitTabs">
+      <button type="button" class="habit-tab active" data-habit="mld">💆 MLD</button>
+      <button type="button" class="habit-tab" data-habit="water">💧 Water</button>
+      <button type="button" class="habit-tab" data-habit="sleep">😴 Sleep</button>
+      <button type="button" class="habit-tab" data-habit="stretch">🧘 Stretch</button>
+    </div>
+    <div class="habit-calendar-row">
+      <div class="cal-day-labels">
+        <div class="cal-day-label">&nbsp;</div>
+        <div class="cal-day-label">Mon</div>
+        <div class="cal-day-label">Tue</div>
+        <div class="cal-day-label">Wed</div>
+        <div class="cal-day-label">Thu</div>
+        <div class="cal-day-label">Fri</div>
+        <div class="cal-day-label">Sat</div>
+        <div class="cal-day-label">Sun</div>
+      </div>
+      <div class="habit-calendar-wrap">
+        <div class="habit-calendar" id="habitCalendar"></div>
+      </div>
+    </div>
+    <div class="habit-legend">
+      <span><i class="dot dot-green"></i>Done</span>
+      <span><i class="dot dot-red"></i>Missed</span>
+      <span><i class="dot dot-neutral"></i>Upcoming</span>
+    </div>
+  </div>
+  <div id="weeksContainer"></div>
+</main>
+
+<footer>
+  <div class="footer-actions">
+    <button class="footer-btn" id="backupBtn" type="button">💾 Save backup</button>
+    <button class="footer-btn" id="restoreBtn" type="button">📂 Restore backup</button>
+    <button class="footer-btn" id="printBtn" type="button">🖨️ Print / save as PDF</button>
+  </div>
+  <input type="file" id="restoreFileInput" accept="application/json" style="display:none">
+  <button class="reset-btn" id="resetBtn">Reset all progress</button>
+</footer>
+
+<div id="printView"></div>
+
+<div class="modal-overlay" id="startDateModal">
+  <div class="modal-card">
+    <h2>When does your plan start?</h2>
+    <p>Pick the Monday you begin Week 1 &mdash; every date in the plan is calculated from here. You can change this later.</p>
+    <input type="date" id="startDateInput">
+    <button class="save-btn" id="startDateSaveBtn" type="button">Save and start</button>
+  </div>
+</div>
+
+<script>
+const weeksData = [
+  { n: 1, total: "7-8 miles", days: [
+    ["Monday","Rest"], ["Tuesday","2 miles"], ["Wednesday","Rest or XT"], ["Thursday","2 miles"],
+    ["Friday","1-2 miles"], ["Saturday","Rest + MT"], ["Sunday","2 miles"] ] },
+  { n: 2, total: "9 miles", days: [
+    ["Monday","1 mile"], ["Tuesday","2 miles"], ["Wednesday","Rest or XT"], ["Thursday","2 miles"],
+    ["Friday","1 mile"], ["Saturday","Rest + MT"], ["Sunday","3 miles"] ] },
+  { n: 3, total: "11 miles", days: [
+    ["Monday","1 mile"], ["Tuesday","2 miles"], ["Wednesday","Rest or XT"], ["Thursday","3 miles"],
+    ["Friday","1 mile"], ["Saturday","Rest + MT"], ["Sunday","4 miles"] ] },
+  { n: 4, total: "9 miles", days: [
+    ["Monday","Rest"], ["Tuesday","2 miles"], ["Wednesday","Rest or XT"], ["Thursday","3 miles"],
+    ["Friday","Rest"], ["Saturday","Rest + MT"], ["Sunday","4 miles"] ] },
+  { n: 5, total: "13-14 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","Rest or XT"], ["Thursday","4 miles"],
+    ["Friday","1-2 miles"], ["Saturday","Rest + MT"], ["Sunday","5 miles"] ] },
+  { n: 6, total: "15 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","Rest or XT"], ["Thursday","4 miles"],
+    ["Friday","2 miles"], ["Saturday","Rest + MT"], ["Sunday","6 miles"] ] },
+  { n: 7, total: "18 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","3 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","7 miles"] ] },
+  { n: 8, total: "15 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","Rest or XT"], ["Thursday","3 miles"],
+    ["Friday","Rest"], ["Saturday","Rest + MT"], ["Sunday","8 miles"] ] },
+  { n: 9, total: "17-19 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","1-3 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","9 miles"] ] },
+  { n: 10, total: "20 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","10 miles"] ] },
+  { n: 11, total: "20 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","11 miles"] ] },
+  { n: 12, total: "15 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","6 miles"] ] },
+  { n: 13, total: "21 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","12 miles"] ] },
+  { n: 14, total: "15 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","6 miles"] ] },
+  { n: 15, total: "25 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","Rest or XT"], ["Thursday","4 miles"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","13 miles"] ] },
+  { n: 16, total: "23 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","14 miles"] ] },
+  { n: 17, total: "16 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","Rest or XT"], ["Thursday","3 miles"],
+    ["Friday","2 miles"], ["Saturday","Rest + MT"], ["Sunday","7 miles"] ] },
+  { n: 18, total: "24 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","2 miles"], ["Thursday","Rest"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","15 miles"] ] },
+  { n: 19, total: "17 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","8 miles"] ] },
+  { n: 20, total: "25 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","16 miles"] ] },
+  { n: 21, total: "17 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","3 miles"], ["Thursday","Rest or XT"],
+    ["Friday","2 miles"], ["Saturday","Rest + MT"], ["Sunday","8 miles"] ] },
+  { n: 22, total: "28 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","3 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","18 miles"] ] },
+  { n: 23, total: "18 miles", days: [
+    ["Monday","Rest"], ["Tuesday","2 miles"], ["Wednesday","4 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","9 miles"] ] },
+  { n: 24, total: "28 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","19 miles"] ] },
+  { n: 25, total: "19 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","10 miles"] ] },
+  { n: 26, total: "29 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","20 miles"] ] },
+  { n: 27, total: "18 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","10 miles"] ] },
+  { n: 28, total: "32 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","4 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","20 miles"] ] },
+  { n: 29, total: "19 miles", days: [
+    ["Monday","Rest"], ["Tuesday","2 miles"], ["Wednesday","3 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","10 miles"] ] },
+  { n: 30, total: "32-33 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","4 miles"], ["Thursday","Rest or XT"],
+    ["Friday","4 miles"], ["Saturday","Rest + MT"], ["Sunday","20-21 miles"] ] },
+  { n: 31, total: "17 miles", days: [
+    ["Monday","Rest"], ["Tuesday","4 miles"], ["Wednesday","2 miles"], ["Thursday","Rest or XT"],
+    ["Friday","3 miles"], ["Saturday","Rest + MT"], ["Sunday","8 miles"] ] },
+  { n: 32, total: "33.2 miles", days: [
+    ["Monday","Rest"], ["Tuesday","3 miles"], ["Wednesday","2 miles"], ["Thursday","0-2 miles"],
+    ["Friday","Rest"], ["Saturday","Rest + MT"], ["Sunday","26.2 miles - RACE DAY!"] ] },
+];
+
+const STORAGE_KEY = "marathonTrackerProgress";
+const START_DATE_KEY = "marathonTrackerStartDate";
+const TOTAL_RUNS = weeksData.reduce((sum, w) => sum + w.days.filter(([, s]) => isRunSession(s)).length, 0);
+const TOTAL_PLAN_MILES = weeksData.reduce((sum, w) => sum + w.days.reduce((s, [, session]) => s + (isRunSession(session) ? (parseDistance(session) || 0) : 0), 0), 0);
+
+const checkSvg = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function keyFor(weekNum, dayIdx) {
+  return "w" + weekNum + "-d" + dayIdx;
+}
+
+function isRunSession(session) {
+  return /mile/i.test(session);
+}
+
+function parseDistance(session) {
+  const nums = session.match(/\d+(\.\d+)?/g);
+  if (!nums) return null;
+  const values = nums.map(Number);
+  if (values.length === 1) return values[0];
+  return (values[0] + values[1]) / 2;
+}
+
+function sessionType(session) {
+  if (session === "Rest") return "rest";
+  if (session === "Rest or XT") return "xt";
+  if (session === "Rest + MT") return "mt";
+  if (/RACE DAY/i.test(session)) return "race";
+  if (isRunSession(session)) {
+    const d = parseDistance(session) || 0;
+    if (d <= 3) return "run-short";
+    if (d <= 8) return "run-medium";
+    if (d <= 15) return "run-long";
+    return "run-verylong";
+  }
+  return "rest";
+}
+
+function parseTimeToSeconds(str) {
+  if (!str) return null;
+  const m = str.trim().match(/^(\d{1,3}):([0-5]?\d)$/);
+  if (!m) return null;
+  return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+}
+
+function formatPace(secondsPerMile) {
+  if (!secondsPerMile || !isFinite(secondsPerMile) || secondsPerMile <= 0) return "–";
+  const m = Math.floor(secondsPerMile / 60);
+  const s = Math.round(secondsPerMile % 60);
+  return `${m}:${pad2(s)} /mi`;
+}
+
+function formatMiles(n) {
+  const rounded = Math.round(n * 10) / 10;
+  return rounded + " mi";
+}
+
+// --- progress storage ---
+
+function loadProgress() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    return raw;
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveProgress(p) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  } catch (e) {
+    console.warn("Could not save progress:", e);
+  }
+}
+
+let progress = loadProgress();
+
+function getEntry(id) {
+  const e = progress[id];
+  if (e === undefined) return { checked: false, rating: null, time: null, mld: false, water: false, sleep: false, stretch: false };
+  if (typeof e === "boolean") return { checked: e, rating: null, time: null, mld: false, water: false, sleep: false, stretch: false };
+  return {
+    checked: !!e.checked,
+    rating: e.rating || null,
+    time: e.time || null,
+    mld: !!e.mld,
+    water: !!e.water,
+    sleep: !!e.sleep,
+    stretch: !!e.stretch
+  };
+}
+
+function setEntry(id, patch) {
+  const current = getEntry(id);
+  progress[id] = Object.assign({}, current, patch);
+  saveProgress(progress);
+}
+
+function weekCompletedCount(week) {
+  return week.days.filter((_, i) => getEntry(keyFor(week.n, i)).checked).length;
+}
+
+// --- start date ---
+
+let startDate = loadStartDate();
+
+function loadStartDate() {
+  let v;
+  try {
+    v = localStorage.getItem(START_DATE_KEY);
+  } catch (e) {
+    return null;
+  }
+  if (!v) return null;
+  return isoToDate(v);
+}
+
+function dateToIso(date) {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+}
+
+function isoToDate(iso) {
+  const parts = iso.split("-").map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return null;
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+
+function saveStartDateValue(date) {
+  try {
+    localStorage.setItem(START_DATE_KEY, dateToIso(date));
+  } catch (e) {
+    console.warn("Could not save start date:", e);
+  }
+}
+
+function getSessionDate(weekNum, dayIdx) {
+  if (!startDate) return null;
+  const d = new Date(startDate);
+  d.setDate(d.getDate() + (weekNum - 1) * 7 + dayIdx);
+  return d;
+}
+
+function formatDate(date) {
+  if (!date) return "";
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+}
+
+function formatDateLong(date) {
+  if (!date) return "";
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function openStartDateModal() {
+  const input = document.getElementById("startDateInput");
+  const base = startDate || new Date();
+  input.value = `${base.getFullYear()}-${pad2(base.getMonth() + 1)}-${pad2(base.getDate())}`;
+  document.getElementById("startDateModal").classList.add("open");
+}
+
+function closeStartDateModal() {
+  document.getElementById("startDateModal").classList.remove("open");
+}
+
+document.getElementById("startDateSaveBtn").addEventListener("click", () => {
+  const val = document.getElementById("startDateInput").value;
+  if (!val) return;
+  startDate = isoToDate(val);
+  saveStartDateValue(startDate);
+  closeStartDateModal();
+  render();
+});
+
+document.getElementById("editStartDateBtn").addEventListener("click", openStartDateModal);
+
+// --- stats & narrative ---
+
+function computeAll() {
+  let runsCompleted = 0, milesLogged = 0, timeSum = 0, distSumForPace = 0;
+  let currentWeek = null;
+
+  weeksData.forEach(week => {
+    let weekDone = 0;
+    week.days.forEach(([, session], idx) => {
+      const entry = getEntry(keyFor(week.n, idx));
+      if (entry.checked) {
+        weekDone++;
+        if (isRunSession(session)) {
+          runsCompleted++;
+          const dist = parseDistance(session) || 0;
+          milesLogged += dist;
+          const secs = parseTimeToSeconds(entry.time);
+          if (secs) {
+            timeSum += secs;
+            distSumForPace += dist;
+          }
+        }
+      }
+    });
+    if (currentWeek === null && weekDone < week.days.length) currentWeek = week.n;
+  });
+
+  return {
+    runsLeft: TOTAL_RUNS - runsCompleted,
+    milesLogged,
+    milesLeft: Math.max(0, TOTAL_PLAN_MILES - milesLogged),
+    avgPaceSeconds: distSumForPace > 0 ? timeSum / distSumForPace : null,
+    currentWeek
+  };
+}
+
+function weekNarrativeText(week) {
+  let good = 0, bad = 0;
+  week.days.forEach(([, session], idx) => {
+    if (!isRunSession(session)) return;
+    const entry = getEntry(keyFor(week.n, idx));
+    if (entry.rating === "good") good++;
+    if (entry.rating === "bad") bad++;
+  });
+  if (good === 0 && bad === 0) return "";
+  if (bad === 0) return `All ${good} run${good === 1 ? "" : "s"} felt good this week 💪`;
+  if (good === 0) return `${bad} tough run${bad === 1 ? "" : "s"} this week`;
+  return `${good} good, ${bad} tough this week`;
+}
+
+function updateHeaderStats() {
+  const all = computeAll();
+  document.getElementById("progressFill").style.width = (all.milesLogged / TOTAL_PLAN_MILES * 100) + "%";
+  document.getElementById("progressText").textContent = `${formatMiles(all.milesLogged)} run`;
+  document.getElementById("milesToGoText").textContent = `${formatMiles(all.milesLeft)} to go`;
+  document.getElementById("weekLabel").textContent = all.currentWeek ? `Week ${all.currentWeek} of 32` : "Plan complete! 🎉";
+  document.getElementById("statRunsLeft").textContent = all.runsLeft;
+  document.getElementById("statMiles").textContent = formatMiles(all.milesLogged);
+  document.getElementById("statPace").textContent = all.avgPaceSeconds ? formatPace(all.avgPaceSeconds) : "–";
+
+  const raceLabel = document.getElementById("raceDateLabel");
+  raceLabel.textContent = startDate ? formatDateLong(getSessionDate(32, 6)) : "Set start date";
+}
+
+function updateWeekNarrative(weekNum) {
+  const week = weeksData.find(w => w.n === weekNum);
+  const details = document.getElementById("week-" + weekNum);
+  const el = details.querySelector(".week-narrative");
+  const isComplete = weekCompletedCount(week) === week.days.length;
+  el.textContent = isComplete ? weekNarrativeText(week) : "";
+}
+
+// --- habits: streaks & calendar ---
+
+let currentHabitTab = "mld";
+
+function longestStreak(habitKey) {
+  let longest = 0, current = 0;
+  weeksData.forEach(week => {
+    week.days.forEach((_, idx) => {
+      const entry = getEntry(keyFor(week.n, idx));
+      if (entry[habitKey]) {
+        current++;
+        longest = Math.max(longest, current);
+      } else {
+        current = 0;
+      }
+    });
+  });
+  return longest;
+}
+
+function formatStreak(n) {
+  return n + (n === 1 ? " day" : " days");
+}
+
+function streakTier(days) {
+  if (days === 0) return "zero";
+  if (days <= 7) return "amber";
+  if (days > 42) return "party";
+  return "green";
+}
+
+function computeDayState(weekNum, idx, done) {
+  if (done) return "done";
+  const date = getSessionDate(weekNum, idx);
+  if (!date) return "future";
+  const cmp = new Date(date);
+  cmp.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (cmp.getTime() < today.getTime()) return "missed";
+  if (cmp.getTime() === today.getTime()) return "today";
+  return "future";
+}
+
+function renderHabitCalendar(habitKey) {
+  const calEl = document.getElementById("habitCalendar");
+  calEl.innerHTML = "";
+  let todayCell = null;
+
+  weeksData.forEach(week => {
+    const label = document.createElement("div");
+    label.className = "cal-week-label";
+    label.textContent = week.n;
+    calEl.appendChild(label);
+
+    week.days.forEach((_, idx) => {
+      const id = keyFor(week.n, idx);
+      const entry = getEntry(id);
+      const done = !!entry[habitKey];
+      const date = getSessionDate(week.n, idx);
+      const state = computeDayState(week.n, idx, done);
+
+      const cell = document.createElement("div");
+      cell.className = "cal-cell state-" + state;
+      const dateLabel = date ? formatDateLong(date) : `Week ${week.n}`;
+      const stateLabel = state === "done" ? "Done" : state === "missed" ? "Missed" : state === "today" ? "Today" : "Upcoming";
+      cell.title = `${dateLabel} — ${stateLabel}`;
+      if (state === "today") todayCell = cell;
+      calEl.appendChild(cell);
+    });
+  });
+
+  if (todayCell) {
+    todayCell.scrollIntoView({ inline: "center", block: "nearest" });
+  }
+}
+
+function updateStreakTile(habitKey, elId) {
+  const days = longestStreak(habitKey);
+  document.getElementById(elId).textContent = formatStreak(days);
+  const tile = document.querySelector(`.streak-tile[data-habit="${habitKey}"]`);
+  tile.classList.remove("tier-zero", "tier-amber", "tier-green", "tier-party");
+  tile.classList.add("tier-" + streakTier(days));
+}
+
+function updateHabitSection() {
+  updateStreakTile("mld", "streakMld");
+  updateStreakTile("water", "streakWater");
+  updateStreakTile("sleep", "streakSleep");
+  updateStreakTile("stretch", "streakStretch");
+  renderHabitCalendar(currentHabitTab);
+}
+
+function handleHabitToggle(btn) {
+  const id = btn.dataset.id;
+  const habit = btn.dataset.habit;
+  const entry = getEntry(id);
+  const newVal = !entry[habit];
+  setEntry(id, { [habit]: newVal });
+  btn.classList.toggle("active", newVal);
+
+  currentHabitTab = habit;
+  document.querySelectorAll(".habit-tab").forEach(b => b.classList.toggle("active", b.dataset.habit === habit));
+
+  updateHabitSection();
+}
+
+document.getElementById("habitTabs").addEventListener("click", e => {
+  const btn = e.target.closest(".habit-tab");
+  if (!btn) return;
+  currentHabitTab = btn.dataset.habit;
+  document.querySelectorAll(".habit-tab").forEach(b => b.classList.toggle("active", b === btn));
+  renderHabitCalendar(currentHabitTab);
+});
+
+// --- backup & restore ---
+
+async function exportBackup() {
+  const data = {
+    version: 1,
+    startDate: startDate ? dateToIso(startDate) : null,
+    progress: progress
+  };
+  const json = JSON.stringify(data, null, 2);
+  const filename = `marathon plan backup ${dateToIso(new Date())}.json`;
+
+  // When hosted as an artifact, the viewer only allows downloads through its own capability.
+  if (window.claude && typeof window.claude.use === "function") {
+    try {
+      const downloads = await window.claude.use("downloads");
+      if (downloads) {
+        await downloads.save({ filename, data: json });
+        return;
+      }
+    } catch (err) {
+      if (err && err.code === "declined") return;
+    }
+  }
+
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function handleRestoreFile(e) {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try {
+      data = JSON.parse(reader.result);
+    } catch (err) {
+      alert("Could not read that file — it doesn't look like a valid backup.");
+      return;
+    }
+    if (!data || typeof data !== "object" || typeof data.progress !== "object") {
+      alert("Could not read that file — it doesn't look like a marathon tracker backup.");
+      return;
+    }
+    if (!confirm("Restore this backup? It will replace your current progress on this device.")) return;
+
+    progress = data.progress || {};
+    saveProgress(progress);
+    if (data.startDate) {
+      const parsed = isoToDate(data.startDate);
+      if (parsed) {
+        startDate = parsed;
+        saveStartDateValue(startDate);
+      }
+    }
+    render();
+    alert("Backup restored!");
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById("backupBtn").addEventListener("click", exportBackup);
+document.getElementById("restoreBtn").addEventListener("click", () => {
+  document.getElementById("restoreFileInput").click();
+});
+document.getElementById("restoreFileInput").addEventListener("change", handleRestoreFile);
+
+// --- printable view ---
+
+function formatMileageLabel(session) {
+  const m = session.match(/^([\d.]+(?:-[\d.]+)?)/);
+  return m ? m[1] : "";
+}
+
+function buildGridTableHTML(cellFn, themeClass) {
+  let html = `<table class="print-grid ${themeClass}"><thead><tr><th class="corner"></th>`;
+  for (let w = 1; w <= 32; w++) html += `<th>${w}</th>`;
+  html += "</tr></thead><tbody>";
+
+  const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  for (let d = 0; d < 7; d++) {
+    html += `<tr><th>${dayNames[d]}</th>`;
+    for (let w = 1; w <= 32; w++) {
+      const session = weeksData[w - 1].days[d][1];
+      const cell = cellFn(w, d, session);
+      html += `<td class="pg-${cell.stateClass}">${cell.text}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</tbody></table>";
+  return html;
+}
+
+function buildPrintView() {
+  const container = document.getElementById("printView");
+  const habits = [
+    { key: "mld", label: "MLD" },
+    { key: "water", label: "Water" },
+    { key: "sleep", label: "Sleep" },
+    { key: "stretch", label: "Stretch" }
+  ];
+
+  const metaText = startDate
+    ? `Start: ${formatDateLong(startDate)} &middot; Race day: ${formatDateLong(getSessionDate(32, 6))}`
+    : "";
+
+  let html = `
+    <h1>32-Week Marathon Plan &mdash; Progress</h1>
+    <p class="print-meta">${metaText}</p>
+    <div class="print-legend"><span>&#10003; Done</span><span>&#10007; Missed</span><span>&middot; Today</span><span>Blank = upcoming</span></div>
+  `;
+
+  habits.forEach(h => {
+    html += `<h2 class="print-grid-title">${h.label}</h2>`;
+    html += buildGridTableHTML((w, d) => {
+      const entry = getEntry(keyFor(w, d));
+      const state = computeDayState(w, d, !!entry[h.key]);
+      const text = state === "done" ? "&#10003;" : state === "missed" ? "&#10007;" : state === "today" ? "&middot;" : "";
+      return { text, stateClass: state };
+    }, `grid-theme-${h.key}`);
+  });
+
+  html += `<h2 class="print-grid-title">Training Runs (miles)</h2>`;
+  html += buildGridTableHTML((w, d, session) => {
+    const entry = getEntry(keyFor(w, d));
+    const state = computeDayState(w, d, entry.checked);
+    let text;
+    if (isRunSession(session)) {
+      text = formatMileageLabel(session);
+    } else {
+      text = state === "done" ? "&#10003;" : state === "missed" ? "&#10007;" : state === "today" ? "&middot;" : "";
+    }
+    return { text, stateClass: state };
+  }, "grid-theme-run");
+
+  container.innerHTML = html;
+}
+
+window.addEventListener("beforeprint", buildPrintView);
+
+document.getElementById("printBtn").addEventListener("click", () => {
+  buildPrintView();
+  window.print();
+});
+
+// --- render ---
+
+function render() {
+  const container = document.getElementById("weeksContainer");
+  container.innerHTML = "";
+
+  const all = computeAll();
+  const firstIncompleteWeek = all.currentWeek;
+
+  weeksData.forEach(week => {
+    const completed = weekCompletedCount(week);
+    const isComplete = completed === week.days.length;
+
+    const details = document.createElement("details");
+    details.className = "week";
+    details.id = "week-" + week.n;
+
+    const summary = document.createElement("summary");
+    summary.className = "week-summary";
+
+    const dateRangeText = startDate ? `${formatDate(getSessionDate(week.n, 0))} – ${formatDate(getSessionDate(week.n, 6))}` : "";
+    const narrativeText = isComplete ? weekNarrativeText(week) : "";
+
+    summary.innerHTML = `
+      <div class="week-row">
+        <div class="week-title">
+          <span class="week-num">Week ${week.n}</span>
+          <span class="week-total">${week.total}</span>
+        </div>
+        <div class="week-right">
+          <span class="week-chip ${isComplete ? "complete" : ""}">${completed}/${week.days.length}</span>
+          <span class="chevron">&#9656;</span>
+        </div>
+      </div>
+      <div class="week-meta">
+        <span class="week-dates">${dateRangeText}</span>
+        <span class="week-narrative">${narrativeText}</span>
+      </div>
+    `;
+    details.appendChild(summary);
+
+    const dayList = document.createElement("div");
+    dayList.className = "day-list";
+
+    week.days.forEach(([dayName, session], idx) => {
+      const id = keyFor(week.n, idx);
+      const entry = getEntry(id);
+      const checked = entry.checked;
+      const type = sessionType(session);
+      const isRun = isRunSession(session);
+      const dateStr = startDate ? formatDate(getSessionDate(week.n, idx)) : "";
+
+      const dayEntry = document.createElement("div");
+      dayEntry.className = `day-entry type-${type}` + (checked ? " checked" : "");
+
+      const label = document.createElement("label");
+      label.className = "day-row" + (checked ? " checked" : "");
+      label.innerHTML = `
+        <input type="checkbox" class="day-check" data-id="${id}" data-week="${week.n}" ${checked ? "checked" : ""}>
+        <span class="checkbox">${checkSvg}</span>
+        <span class="day-info">
+          <span class="day-name">${dayName}${dateStr ? " · " + dateStr : ""}</span>
+          <span class="session-text">${session}</span>
+        </span>
+      `;
+      dayEntry.appendChild(label);
+
+      const habitsRow = document.createElement("div");
+      habitsRow.className = "habits-row";
+      habitsRow.innerHTML = `
+        <button type="button" class="habit-btn ${entry.mld ? "active" : ""}" data-id="${id}" data-habit="mld" title="Manual Lymph Drainage">💆</button>
+        <button type="button" class="habit-btn ${entry.water ? "active" : ""}" data-id="${id}" data-habit="water" title="Water">💧</button>
+        <button type="button" class="habit-btn ${entry.sleep ? "active" : ""}" data-id="${id}" data-habit="sleep" title="Sleep">😴</button>
+        <button type="button" class="habit-btn ${entry.stretch ? "active" : ""}" data-id="${id}" data-habit="stretch" title="Stretch">🧘</button>
+      `;
+      dayEntry.appendChild(habitsRow);
+
+      if (isRun) {
+        const dist = parseDistance(session);
+        const secs = parseTimeToSeconds(entry.time);
+        const paceText = (secs && dist) ? formatPace(secs / dist) : "";
+
+        const panel = document.createElement("div");
+        panel.className = "run-panel";
+        panel.innerHTML = `
+          <div class="rating-buttons">
+            <button type="button" class="rate-btn rate-good ${entry.rating === "good" ? "active" : ""}" data-id="${id}" data-rating="good">👍 Good</button>
+            <button type="button" class="rate-btn rate-bad ${entry.rating === "bad" ? "active" : ""}" data-id="${id}" data-rating="bad">👎 Tough</button>
+          </div>
+          <div class="time-input-wrap">
+            <span class="time-label">Time</span>
+            <input type="text" class="time-input" data-id="${id}" placeholder="mm:ss" value="${entry.time || ""}" maxlength="6">
+            <span class="pace-display">${paceText}</span>
+          </div>
+        `;
+        dayEntry.appendChild(panel);
+      }
+
+      dayList.appendChild(dayEntry);
+    });
+
+    details.appendChild(dayList);
+    if (week.n === firstIncompleteWeek) details.open = true;
+    container.appendChild(details);
+  });
+
+  updateHeaderStats();
+  updateHabitSection();
+}
+
+// --- event delegation (bound once) ---
+
+const weeksContainer = document.getElementById("weeksContainer");
+
+weeksContainer.addEventListener("change", e => {
+  if (e.target.classList.contains("day-check")) onToggle(e);
+  else if (e.target.classList.contains("time-input")) onTimeChange(e);
+});
+
+weeksContainer.addEventListener("click", e => {
+  const rateBtn = e.target.closest(".rate-btn");
+  if (rateBtn) { handleRating(rateBtn); return; }
+  const habitBtn = e.target.closest(".habit-btn");
+  if (habitBtn) { handleHabitToggle(habitBtn); return; }
+});
+
+function onToggle(e) {
+  const id = e.target.dataset.id;
+  const weekNum = parseInt(e.target.dataset.week, 10);
+  const week = weeksData.find(w => w.n === weekNum);
+  const wasComplete = weekCompletedCount(week) === week.days.length;
+
+  setEntry(id, { checked: e.target.checked });
+
+  const dayEntry = e.target.closest(".day-entry");
+  dayEntry.classList.toggle("checked", e.target.checked);
+  const row = e.target.closest(".day-row");
+  row.classList.toggle("checked", e.target.checked);
+
+  const completed = weekCompletedCount(week);
+  const isComplete = completed === week.days.length;
+  const details = document.getElementById("week-" + weekNum);
+  const chip = details.querySelector(".week-chip");
+  chip.textContent = `${completed}/${week.days.length}`;
+  chip.classList.toggle("complete", isComplete);
+
+  updateWeekNarrative(weekNum);
+
+  if (isComplete && !wasComplete) {
+    details.open = false;
+    const nextWeek = weeksData.find(w => weekCompletedCount(w) < w.days.length);
+    if (nextWeek) {
+      const nextDetails = document.getElementById("week-" + nextWeek.n);
+      nextDetails.open = true;
+      nextDetails.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  updateHeaderStats();
+}
+
+function handleRating(btn) {
+  const id = btn.dataset.id;
+  const rating = btn.dataset.rating;
+  const entry = getEntry(id);
+  const newRating = entry.rating === rating ? null : rating;
+  setEntry(id, { rating: newRating });
+
+  const panel = btn.closest(".run-panel");
+  panel.querySelectorAll(".rate-btn").forEach(b => b.classList.toggle("active", b.dataset.rating === newRating));
+
+  const weekNum = parseInt(id.match(/^w(\d+)-/)[1], 10);
+  updateWeekNarrative(weekNum);
+}
+
+function onTimeChange(e) {
+  const id = e.target.dataset.id;
+  const raw = e.target.value.trim();
+  const secs = parseTimeToSeconds(raw);
+  setEntry(id, { time: secs ? raw : null });
+
+  const weekNum = parseInt(id.match(/^w(\d+)-/)[1], 10);
+  const dayIdx = parseInt(id.match(/-d(\d+)$/)[1], 10);
+  const week = weeksData.find(w => w.n === weekNum);
+  const session = week.days[dayIdx][1];
+  const dist = parseDistance(session);
+  const paceEl = e.target.closest(".time-input-wrap").querySelector(".pace-display");
+  paceEl.textContent = (secs && dist) ? formatPace(secs / dist) : "";
+
+  updateHeaderStats();
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (confirm("Reset all ticked sessions? This can't be undone.")) {
+    progress = {};
+    saveProgress(progress);
+    render();
+  }
+});
+
+function storageAvailable() {
+  try {
+    localStorage.setItem("__mtTest", "1");
+    localStorage.removeItem("__mtTest");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function setHomeScreenIcon() {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 180;
+    canvas.height = 180;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#d9622b";
+    ctx.fillRect(0, 0, 180, 180);
+    ctx.font = "110px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🏃", 90, 98);
+    const link = document.createElement("link");
+    link.rel = "apple-touch-icon";
+    link.href = canvas.toDataURL("image/png");
+    document.head.appendChild(link);
+  } catch (e) {
+    console.warn("Could not create home screen icon:", e);
+  }
+}
+
+if (!storageAvailable()) {
+  document.getElementById("storageWarning").hidden = false;
+}
+setHomeScreenIcon();
+
+render();
+buildPrintView();
+if (!startDate) openStartDateModal();
+</script>
+
+</body>
+</html>
